@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 29
+/svn/repo/!svn/ver/47/rpc-api
+END
+pom.xml
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/repo/!svn/ver/48/rpc-api/pom.xml
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/repo/!svn/ver/48/rpc-api/.project
+END
+.classpath
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/repo/!svn/ver/48/rpc-api/.classpath
+END

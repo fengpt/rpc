@@ -1,0 +1,75 @@
+package com.rpc.client;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.rpc.api.Api;
+import com.rpc.data.RequestData;
+
+public class RpcClient {
+	/***
+	 * 客户端远程代理  
+	 * @param interfaceClass
+	 * @param address
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Object getRemoteProxy(final Class<?> interfaceClass,final InetSocketAddress address){
+		return  (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{interfaceClass}, new InvocationHandler() {
+			public Object invoke(Object proxy, Method method, Object[] args)
+					throws Throwable {
+								try{
+									Socket client=new Socket();
+									client.connect(address);
+									try{
+										ObjectOutputStream serializer=new ObjectOutputStream(client.getOutputStream());
+										ObjectInputStream deserializer=new ObjectInputStream(client.getInputStream());
+										RequestData requestData=new RequestData();
+										requestData.setInterfaceName(interfaceClass.getName());
+										requestData.setMethodName(method.getName());
+										requestData.setParameterTypes(method.getParameterTypes());
+										requestData.setParameter(args);
+										serializer.writeObject(requestData);
+										return deserializer.readObject();
+									}catch(Exception e){
+										
+									}
+								}catch(Exception e){
+									
+								}
+				return null;
+			}
+		});
+	}
+	
+	
+	public static void main(String[] args) {
+		Api api=(Api) RpcClient.getRemoteProxy(Api.class, new InetSocketAddress("localhost", 12345));
+		String result=api.testApi("fwpfjgwwj");
+		System.out.println(result);
+		/***
+		 * 可以将spring框架引入，即可用spring管理对象
+		 */
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+	}
+	
+}
